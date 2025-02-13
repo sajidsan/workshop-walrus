@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #13121D;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -31,18 +31,47 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 48px;
+  font-weight:600;
   line-height: 1.1;
+  margin-block-end:16px;
+}
+h2 {
+  font-size: 24px;
+  font-weight:400;
+  color: #a1a0ab;
+  line-height: 1.1;
+  margin-block-start:0px;
+  margin-block-end:32px;
+}
+h3 {
+  font-size: 12px;
+  font-weight: 600;
+  margin-block-start:0px;
+  margin-block-end:0px;
+}
+
+h4 {
+  font-weight:600;
+  margin-top:0px;
+  margin-bottom:0px
+}
+
+p {
+  color: #878593;
+  margin-top:0px;
+  margin-bottom:0px;
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid #151515;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #262626;
+  color: #a7a5b3;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -52,6 +81,42 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.container {
+  padding: 20px;
+  max-width: 520px;
+  margin: auto;
+  
+}
+
+.activityContainer {
+  margin-top: 20px;
+  padding-top: 24px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-style:solid;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: #33323E;
+  background-color: #181622;
+}
+
+.activityCard-wrapper {
+  border: 1px transparent #33323E;
+  border-radius:6px;
+  background-color: transparent;
+  padding: 0px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  margin-
+}
+.activityCard {
+  border: 1px solid #33323E;
+  padding: 20px;
+  border-style: solid;
+  border-radius: 6px;
+  background-color: #211F2D;
 }
 
 @media (prefers-color-scheme: light) {

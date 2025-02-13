@@ -47,12 +47,12 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "520px", margin: "auto" }}>
+    <div className="container" >
       
       <h1>Workshop Walrus 1.0</h1>
       <h2>Oh hello there ya blubberin' bumble butt. Won't ya describe the type of workshop you'd like to build?</h2>
       <form onSubmit={handleSubmit}>
-        <textarea
+        <textarea 
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => {
@@ -62,37 +62,42 @@ function App() {
           }}
           style={{
             width: "100%",
+            boxSizing: "border-box",
             height: "120px", // Makes it larger
             padding: "10px",
-            marginBottom: "10px",
+            marginBottom: "4px",
             fontSize: "16px",
             resize: "vertical", // Allows resizing vertically
+            borderRadius: "6px",
+            backgroundColor: "#13121D",
     }}
 />
         <br></br>
-        <button type="submit" disabled={loading} style={{ padding: "10px", color: "#aaaaaa"}}>
+        <button type="submit" disabled={loading}>
           {loading ? "Loading..." : "Cmd + Enter"}
         </button>
       </form>
         
-      {introText && (
-  <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
-    <strong>Notes:</strong>
-    <p>{introText}</p>
-  </div>
-)}
-
-{workshopActivities.length > 0 && (
-  <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ccc" }}>
-    <strong>Workshop Activities:</strong>
-    {workshopActivities.map((activity, index) => (
-      <div key={index} style={{ border: "1px solid #ddd", padding: "10px", margin: "10px", borderRadius: "5px" }}>
-        <h3>{activity.title}</h3>
-        <p>{activity.description}</p>
+          {introText && (
+      <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
+        <strong>Notes:</strong>
+        <p>{introText}</p>
       </div>
-    ))}
-  </div>
-)}
+    )}
+
+      {workshopActivities.length > 0 && (
+        <div className="activityContainer" >
+          <h3>WORKSHOP ACTIVITIES</h3>
+          {workshopActivities.map((activity, index) => (
+            <div className="activityCard-wrapper">
+              <div className="activityCard" key={index}>
+                <h4>{activity.title}</h4>
+                <p>{activity.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   
   )
