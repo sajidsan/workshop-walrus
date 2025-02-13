@@ -1,3 +1,30 @@
+
+
+body {
+  background: linear-gradient(135deg, #1a1a1a, #0e0e0e);
+  color: #e0e0e0;
+  font-family: 'Inter', sans-serif;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  border: 1px solid #6d28d9; /* Light purple */
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.15);
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -33,10 +60,3 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}

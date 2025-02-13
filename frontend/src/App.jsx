@@ -2,7 +2,7 @@ import { useState } from "react";
 import { fetchChatResponse } from './api';
 
 function App() {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState("I'd like to run a 2 hour workshop for 5 people to imagine a walrus friendly future loosely based on the methodologies of Jan Chipchase and Studio D.");
   const [response, setResponse] = useState("");
   const [introText, setIntroText] = useState("");
   const [workshopActivities, setWorkshopActivities] = useState([]);
@@ -51,13 +51,24 @@ function App() {
       <h1>Workshop Walrus 1.0</h1>
       <h2>Oh hello there ya blubberin' bumble but. Won't ya describe the type of workshop you'd like to build?</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Enter your message..."
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-        />
+          onKeyDown={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+              handleSubmit(e); // Call form submission
+            }
+          }}
+          style={{
+            width: "100%",
+            height: "120px", // Makes it larger
+            padding: "10px",
+            marginBottom: "10px",
+            fontSize: "16px",
+            resize: "vertical", // Allows resizing vertically
+    }}
+/>
+        <br></br>
         <button type="submit" disabled={loading} style={{ padding: "10px"}}>
           {loading ? "Loading..." : "Send"}
         </button>
@@ -65,7 +76,7 @@ function App() {
         
       {introText && (
   <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
-    <strong>ChatGPT Response:</strong>
+    <strong>Notes:</strong>
     <p>{introText}</p>
   </div>
 )}
