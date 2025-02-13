@@ -47,7 +47,8 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "500px", margin: "auto" }}>
+    <div style={{ padding: "20px", maxWidth: "520px", margin: "auto" }}>
+      
       <h1>Workshop Walrus 1.0</h1>
       <h2>Oh hello there ya blubberin' bumble but. Won't ya describe the type of workshop you'd like to build?</h2>
       <form onSubmit={handleSubmit}>
