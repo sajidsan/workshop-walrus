@@ -75,3 +75,5 @@ app.get("/api/chat", (req, res) => {
 // ✅ Ensure Dynamic Port for Railway
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
+export default app; // ✅ Ensures Railway can properly handle the Express app
