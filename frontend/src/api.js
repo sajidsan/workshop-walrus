@@ -1,6 +1,6 @@
 export const fetchChatResponse = async (prompt) => {
     try {
-        const response = await fetch("http://localhost:3001/api/chat", {
+        const response = await fetch('$import.meta.env.VITE_BACKEND_URL', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt }),
