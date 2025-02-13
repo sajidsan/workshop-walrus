@@ -70,8 +70,8 @@ function App() {
     }}
 />
         <br></br>
-        <button type="submit" disabled={loading} style={{ padding: "10px"}}>
-          {loading ? "Loading..." : "Send"}
+        <button type="submit" disabled={loading} style={{ padding: "10px", color: "#aaaaaa"}}>
+          {loading ? "Loading..." : "Cmd + Enter"}
         </button>
       </form>
         
