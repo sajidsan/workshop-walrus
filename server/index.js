@@ -15,6 +15,14 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // Allow frontend requests
 
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' https://apis.google.com https://cdnjs.cloudflare.com; object-src 'none';"
+  );
+  next();
+});
+
 // ✅ Ensure OpenAI API Key Exists
 if (!process.env.OPENAI_API_KEY) {
   console.error("❌ OPENAI_API_KEY is missing! Add it to Railway's environment variables.");
