@@ -5,6 +5,12 @@ import cors from "cors";
 
 dotenv.config();  // Load .env variables
 
+import dotenv from "dotenv";
+dotenv.config();
+
+console.log("DEBUG: Loaded OPENAI_API_KEY →", process.env.OPENAI_API_KEY ? "✅ Yes" : "❌ No");
+console.log("DEBUG: Full Env Variables →", process.env);
+
 console.log("Loaded API Key:", process.env.OPENAI_API_KEY ? "✅ Yes" : "❌ No");
 
 // ✅ Create Express App
