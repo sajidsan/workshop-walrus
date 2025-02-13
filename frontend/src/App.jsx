@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fetchChatResponse } from './api';
+import { motion } from "framer-motion";
 
 function App() {
   const [prompt, setPrompt] = useState("I'd like to run a 2 hour workshop for 5 people to imagine a walrus friendly future loosely based on the methodologies of Jan Chipchase and Studio D.");
@@ -46,6 +47,32 @@ function App() {
     setLoading(false);
   };
 
+
+  // 🟢 Function to Copy Activities to Clipboard
+  const copyToClipboard = async () => {
+    try {
+      const text = workshopActivities.map(a => `${a.title}: ${a.description}`).join("\n\n");
+      await navigator.clipboard.writeText(text);
+      alert("Copied to clipboard! ✅");
+    } catch (err) {
+      console.error("Failed to copy", err);
+    }
+  };
+
+  // 🟢 Function to Download CSV
+  const downloadCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," +
+      workshopActivities.map(a => `"${a.title}","${a.description}"`).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "workshop_activities.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="container" >
       
@@ -61,18 +88,20 @@ function App() {
             }
           }}
           style={{
-            width: "100%",
-            boxSizing: "border-box",
-            height: "120px", // Makes it larger
-            padding: "10px",
-            marginBottom: "4px",
-            fontSize: "16px",
-            resize: "vertical", // Allows resizing vertically
-            borderRadius: "6px",
-            backgroundColor: "#13121D",
+            width: "100%", // Ensures it spans the container
+    minHeight: "120px", // Keeps it larger
+    padding: "12px",
+    fontSize: "16px",
+    fontFamily: "Inter, sans-serif", // Ensures consistent styling
+    resize: "vertical", // Allows resizing but keeps default size
+    borderRadius: "6px",
+    border: "1px solid #444",
+    backgroundColor: "#13121D",
+    color: "#fff", // Makes text readable
+    boxSizing: "border-box", // Prevents size issues
     }}
 />
-        <br></br>
+        
         <button type="submit" disabled={loading}>
           
             {loading ? "Loading..." : "Cmd + Enter"}
@@ -88,17 +117,39 @@ function App() {
     )}
 
       {workshopActivities.length > 0 && (
-        <div className="activityContainer" >
-          <h3>WORKSHOP ACTIVITIES</h3>
-          {workshopActivities.map((activity, index) => (
-            <div className="activityCard-wrapper">
-              <div className="activityCard" key={index}>
-                <h4>{activity.title}</h4>
-                <p>{activity.description}</p>
-              </div>
-            </div>
-          ))}
+        <motion.div 
+          className="activityContainer"
+          initial={{ opacity: 0, y: 20 }} // Start invisible and slightly lower
+          animate={{ opacity: 1, y: 0 }} // Animate to full visibility and move up
+          transition={{ duration: .6, ease: "easeOut" }} // Smooth transition
+          
+        >
+      
+      <h3 style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        WORKSHOP ACTIVITIES
+        <div style={{ display: "flex", gap: "8px" }}>
+         <button onClick={copyToClipboard}>📋 Copy</button>
+         <button onClick={downloadCSV}>📂 Download CSV</button>
         </div>
+      </h3>
+            {workshopActivities.map((activity, index) => (
+              <motion.div 
+                key={index}
+                className="activityCard-wrapper"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: .3 + index * 0.1 }} // Staggered effect
+                
+                >
+
+                <div className="activityCard" key={index}>
+                  <h4>{activity.title}</h4>
+                  <p>{activity.description}</p>
+                </div>
+              </motion.div>
+            ))}
+        
+        </motion.div>
       )}
     </div>
   

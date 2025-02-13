@@ -13,6 +13,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+textarea {
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0px 0px 8px 0px;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,6 +42,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+}
+
+h1, h2, h3 {
+  text-align: left;
 }
 
 h1 {
@@ -74,7 +92,16 @@ button {
   color: #a1a0ab;
   cursor: pointer;
   transition: border-color 0.25s;
+  width: auto; /* Only as wide as content */
+  min-width: fit-content; /* Optional: Ensure it doesn't get too small */
+  text-align: center; /* Center text inside */
+  display: inline-block;  /* Keeps buttons sized to content */
+  align-items: center;  /* Vertically centers text/icons */
+  justify-content: center; /* Ensures text stays centered */
+  
+
 }
+
 button:hover {
   border-color: #646cff;
 }
@@ -85,8 +112,13 @@ button:focus-visible {
 
 .container {
   padding: 20px;
-  max-width: 520px;
-  margin: auto;
+  max-width: 520px; 
+  min-height: 100vh; 
+  margin: 0 auto; 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   
 }
 
@@ -100,6 +132,9 @@ button:focus-visible {
   border-radius: 5px;
   border-color: #33323E;
   background-color: #181622;
+  min-height: 100px; /* Prevents height collapse */
+  width: 100%; /* Ensures it doesn't shrink */
+  box-sizing: border-box; /* Prevents overflow */
 }
 
 .activityCard-wrapper {
@@ -127,8 +162,5 @@ button:focus-visible {
   }
   a:hover {
     color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }
