@@ -66,12 +66,12 @@ p {
 button {
   border-radius: 8px;
   border: 1px solid #151515;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 500;
   font-family: inherit;
-  background-color: #262626;
-  color: #a7a5b3;
+  background-color: #23222E;
+  color: #a1a0ab;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -109,8 +109,9 @@ button:focus-visible {
   padding: 0px;
   margin-top: 8px;
   margin-bottom: 16px;
-  margin-
+  
 }
+
 .activityCard {
   border: 1px solid #33323E;
   padding: 20px;

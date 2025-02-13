@@ -74,7 +74,9 @@ function App() {
 />
         <br></br>
         <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Cmd + Enter"}
+          
+            {loading ? "Loading..." : "Cmd + Enter"}
+          
         </button>
       </form>
         
