@@ -1,9 +1,41 @@
 import { useState } from "react";
 import { fetchChatResponse } from './api';
 import { motion } from "framer-motion";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
+
+function SortableItem({ id, title, description }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: "grab"  // Keep cursor behavior if you like
+  };
+
+  return (
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners}
+      className="activityCard"
+    >
+      <h4>{title}</h4>
+      <p>{description}</p>
+    </div>
+  );
+}
 
 function App() {
-  const [prompt, setPrompt] = useState("I'd like to run a 2 hour workshop for 5 people to imagine a walrus friendly future loosely based on the methodologies of Jan Chipchase and Studio D.");
+  const [prompt, setPrompt] = useState("I'd like to run a 2 hour workshop for the members of Kobra Kai to imagine a karate friendly future. When creating activities, please reference the openly available work and methodologies of Ideo, the Institute of the Future, and Studio D.");
   const [response, setResponse] = useState("");
   const [introText, setIntroText] = useState("");
   const [workshopActivities, setWorkshopActivities] = useState([]);
@@ -12,43 +44,44 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setWorkshopActivities([]); // Clear previous response
+    setWorkshopActivities([]);
 
     try {
       const data = await fetchChatResponse(prompt);
-      console.log("Raw API response:", data); //debug
+      console.log("Raw API response:", data);
 
-      //Extract JSON response safely
       let rawContent = data.choices?.[0]?.message?.content || "[]";
-      console.log("Raw content from AI:", rawContent); //debug
-      
-
+      console.log("Raw content from AI:", rawContent);
 
       if (rawContent.trim().startsWith("{") || rawContent.trim().startsWith("[")) {
         try {
-          const activities = JSON.parse(rawContent); // ✅ Safely parse JSON
-          setWorkshopActivities(activities);
+          const activities = JSON.parse(rawContent);
+          const enriched = activities.map((a, index) => ({ ...a, id: `activity-${index}` }));
+          setWorkshopActivities(enriched);
         } catch (error) {
           console.error("Error parsing structured response:", error);
-          setWorkshopActivities([{ title: "Error", description: "Could not load activities." }]);
+          setWorkshopActivities([{ id: "error", title: "Error", description: "Could not load activities." }]);
         }
       } else {
-        // ✅ If response is not JSON, store it as plain text
         setIntroText(rawContent);
       }
 
     } catch (error) {
       console.error("Error parsing response:", error);
-      setWorkshopActivities([{
-        title: "Error",
-        description: "could not load activities.",
-      }]);
+      setWorkshopActivities([{ id: "error", title: "Error", description: "could not load activities." }]);
     }
     setLoading(false);
   };
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = workshopActivities.findIndex(a => a.id === active.id);
+      const newIndex = workshopActivities.findIndex(a => a.id === over?.id);
+      setWorkshopActivities(arrayMove(workshopActivities, oldIndex, newIndex));
+    }
+  };
 
-  // 🟢 Function to Copy Activities to Clipboard
   const copyToClipboard = async () => {
     try {
       const text = workshopActivities.map(a => `${a.title}: ${a.description}`).join("\n\n");
@@ -59,11 +92,9 @@ function App() {
     }
   };
 
-  // 🟢 Function to Download CSV
   const downloadCSV = () => {
     const csvContent = "data:text/csv;charset=utf-8," +
       workshopActivities.map(a => `"${a.title}","${a.description}"`).join("\n");
-
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -74,86 +105,78 @@ function App() {
   };
 
   return (
-    <div className="container" >
-      
+    <div className="container">
       <h1>Workshop Walrus 1.0</h1>
       <h2>Oh hello there ya blubberin' bumble butt. Won't ya describe the type of workshop you'd like to build?</h2>
       <form onSubmit={handleSubmit}>
-        <textarea 
+        <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-              handleSubmit(e); // Call form submission
+              handleSubmit(e);
             }
           }}
           style={{
-            width: "100%", // Ensures it spans the container
-    minHeight: "120px", // Keeps it larger
-    padding: "12px",
-    fontSize: "16px",
-    fontFamily: "Inter, sans-serif", // Ensures consistent styling
-    resize: "vertical", // Allows resizing but keeps default size
-    borderRadius: "6px",
-    border: "1px solid #444",
-    backgroundColor: "#13121D",
-    color: "#fff", // Makes text readable
-    boxSizing: "border-box", // Prevents size issues
-    }}
-/>
-        
+            width: "100%",
+            minHeight: "120px",
+            padding: "12px",
+            fontSize: "16px",
+            fontFamily: "Inter, sans-serif",
+            resize: "vertical",
+            borderRadius: "6px",
+            border: "1px solid #444",
+            backgroundColor: "#13121D",
+            color: "#fff",
+            boxSizing: "border-box",
+          }}
+        />
         <button type="submit" disabled={loading}>
-          
-            {loading ? "Loading..." : "Cmd + Enter"}
-          
+          {loading ? "Loading..." : "Cmd + Enter"}
         </button>
       </form>
-        
-          {introText && (
-      <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
-        <strong>Notes:</strong>
-        <p>{introText}</p>
-      </div>
-    )}
+
+      {introText && (
+        <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
+          <strong>Notes:</strong>
+          <p>{introText}</p>
+        </div>
+      )}
 
       {workshopActivities.length > 0 && (
-        <motion.div 
+        <motion.div
           className="activityContainer"
-          initial={{ opacity: 0, y: 20 }} // Start invisible and slightly lower
-          animate={{ opacity: 1, y: 0 }} // Animate to full visibility and move up
-          transition={{ duration: .6, ease: "easeOut" }} // Smooth transition
-          
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: .6, ease: "easeOut" }}
         >
-      
-      <h3 style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-        WORKSHOP ACTIVITIES
-        <div style={{ display: "flex", gap: "8px" }}>
-         <button onClick={copyToClipboard}>📋 Copy</button>
-         <button onClick={downloadCSV}>📂 Download CSV</button>
-        </div>
-      </h3>
-            {workshopActivities.map((activity, index) => (
-              <motion.div 
-                key={index}
-                className="activityCard-wrapper"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: .3 + index * 0.1 }} // Staggered effect
-                
-                >
-
-                <div className="activityCard" key={index}>
-                  <h4>{activity.title}</h4>
-                  <p>{activity.description}</p>
-                </div>
-              </motion.div>
-            ))}
-        
+          <h3 style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            WORKSHOP ACTIVITIES
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button onClick={copyToClipboard}>📋 Copy</button>
+              <button onClick={downloadCSV}>📂 Download CSV</button>
+            </div>
+          </h3>
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+          >
+            <SortableContext items={workshopActivities.map(a => a.id)} strategy={verticalListSortingStrategy}>
+              {workshopActivities.map((activity) => (
+                <SortableItem
+                  key={activity.id}
+                  id={activity.id}
+                  title={activity.title}
+                  description={activity.description}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         </motion.div>
       )}
     </div>
-  
-  )
+  );
 }
 
-export default App
+export default App;
