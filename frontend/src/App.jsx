@@ -107,7 +107,7 @@ function App() {
   return (
     <div className="container">
       <h1>Workshop Walrus 1.0</h1>
-      <h2>Oh hello there ya blubberin' bumble butt. Won't ya describe the type of workshop you'd like to build?</h2>
+      <h2>Oh hello there ya billowin’ butterbean. Won't ya describe the type of workshop you'd like to build?</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           value={prompt}

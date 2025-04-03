@@ -18,6 +18,9 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   margin: 0px 0px 8px 0px;
+  line-height: 1.2em;
+  min-height: 6em;
+  resize: vertical;
 }
 
 form {
